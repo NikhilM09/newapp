@@ -1,0 +1,10 @@
+$primary_1 : red;
+
+body{
+    color:$primary_1;
+
+    font : {
+        weight:bold;
+        size:30px;
+    }
+}
