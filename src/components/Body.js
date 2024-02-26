@@ -8,7 +8,6 @@ const Body = () =>{
     return(
         <>
             <Cardcontainer/>
-            <Footer/>
         </>
         
     );

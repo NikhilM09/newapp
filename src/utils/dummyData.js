@@ -1,5 +1,5 @@
 
-const masterData = [
+let masterData = [
   {
     "statusCode": 0,
     "data":
