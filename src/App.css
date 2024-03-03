@@ -59,3 +59,19 @@ table {
     -webkit-box-orient: vertical;
 	overflow: hidden;
 }
+
+.imgContainer, .nameContainer, .cuisineContainer, .areaContainer, .ratingContainer, .timeContainer {
+	width:100%;
+	background-color:rgb(235, 233, 233);
+	height:10px;
+}
+
+.imgContainer{
+	height:150px;
+}
+
+.ratingContainer, .timeContainer{
+	width:40px;
+}
+
+

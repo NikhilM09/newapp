@@ -1,46 +1,113 @@
 import Restaurantcard from "./Restaurantcard";
 import masterData from "../utils/dummyData";
-import { IMG_URL} from '../utils/config';
-import {useState, useEffect} from 'react';
+import { IMG_URL } from '../utils/config';
+import { useState, useEffect } from 'react';
 import { RES_URL } from "../utils/config";
+import Shimmer from "./Shimmer";
 
-const Cardcontainer = () =>{
+const Cardcontainer = () => {
     // const collection = masterData[0]?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants;
     const [restaurant, setRestaurant] = useState([]);
-    const getData = async() => {
-        try{
+    const [masterData, setMasterData] = useState([]);
+    const [searchText, setSearchText] = useState("");
+    const [category, setActiveCategory] = useState("");
+    const getData = async () => {
+        try {
             const data = await fetch(RES_URL);
             const json = await data.json();
-            console.log("responseData", json?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants);
+            console.log("responseData", json);
             setRestaurant(json?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants);
+            setMasterData(json?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants);
         }
-        catch(err){
+        catch (err) {
             console.log("error", err);
+            
         }
     }
 
-    useEffect(()=>{
+    const handleSearchText = (e) => {
+        setSearchText(e.target.value);
+    }
+
+    const searchRestaurant = () => {
+        console.log("restaurant", restaurant);
+        //filter restaurant logic start//
+        const filteredData = masterData.filter(resItem => resItem?.info?.name.toLowerCase().includes(searchText.toLowerCase()));
+        setRestaurant(filteredData);
+    }
+
+    const handleRating = () => {
+        const filteredData = masterData.filter(resItem => resItem?.info?.avgRating > 4.5);
+        if (restaurant !== masterData && category === "rating") {
+            handleReset();
+        }
+        else {
+            setRestaurant(filteredData);
+            setActiveCategory("rating");
+            console.log("filteredData", filteredData);
+        }
+    }
+
+    const handleDeliveryTime = () => {
+        const filteredData = masterData.filter(resItem => resItem?.info?.sla?.deliveryTime < 30);
+        if (restaurant !== masterData && category === "delivery") {
+            handleReset();
+        }
+        else {
+            setRestaurant(filteredData);
+            setActiveCategory("delivery");
+            console.log("filteredData", filteredData);
+        }
+    }
+
+    const handleCategory = () => {
+        setActiveCategory("veg");
+        const filteredData = masterData.filter(resItem => resItem?.info?.veg);
+        setRestaurant(filteredData);
+        console.log("filteredData", filteredData);
+    }
+
+    const handleReset = () => {
+        setActiveCategory("");
+        setRestaurant(masterData);
+    }
+    useEffect(() => {
         console.log("useEffect called");
         getData();
-	},[]);
+    }, []);
 
     console.log("component rendered");
-    return(
+    return (
         <>
-        <div className="container d-flex justify-content-between flex-wrap mt-4 gap-4" >
-            {
-                restaurant.map((card, index)=>{
-                    return(
-                        <Restaurantcard
-                        key={card?.info?.id}
-                        {...card?.info}               
-                        />
-                    )
-                })
-            }
-        </div>
+            <div className="container d-flex justify-content-between align-items-center mt-4">
+                <div className="d-flex gap-2">
+                    <input type="text" value={searchText} onChange={handleSearchText} />
+                    <button className="btn btn-sm btn-success" onClick={searchRestaurant}>Search</button>
+                </div>
+                <div className="btn-container">
+                    <button className="btn btn-sm btn-dark mx-1" style={{ backgroundColor: category === "rating" ? "green" : "" }} onClick={handleRating}>Rating 4.5+</button>
+                    <button className="btn btn-sm btn-dark mx-1" style={{ backgroundColor: category === "delivery" ? "green" : "" }} onClick={handleDeliveryTime}>Fast delivery</button>
+                    <button className="btn btn-sm btn-dark mx-1" onClick={handleCategory}>Pure Veg</button>
+                    {category && <button className="btn btn-sm btn-dark mx-1" onClick={handleReset}>Reset</button>}
+                </div>
+            </div>
+            <div className="container d-flex flex-wrap mt-4 gap-4" >
+                {
+                    restaurant.length !== 0  ?
+                        restaurant.map((card, index) => {
+                            return (
+                                <Restaurantcard
+                                    key={card?.info?.id}
+                                    {...card?.info}
+                                />
+                            )
+                        }) : new Array(20).fill(0).map((card, index) => {
+                            return (<Shimmer key={index} />)
+                        })
+                }
+            </div>
         </>
-        
+
     );
 }
 
