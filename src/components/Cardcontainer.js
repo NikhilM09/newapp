@@ -4,6 +4,7 @@ import { IMG_URL } from '../utils/config';
 import { useState, useEffect } from 'react';
 import { RES_URL } from "../utils/config";
 import Shimmer from "./Shimmer";
+import Category from "./Category";
 
 const Cardcontainer = () => {
     // const collection = masterData[0]?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants;
@@ -11,17 +12,20 @@ const Cardcontainer = () => {
     const [masterData, setMasterData] = useState([]);
     const [searchText, setSearchText] = useState("");
     const [category, setActiveCategory] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
+    const [categoryTitle, setCategoryTitle] = useState("");
     const getData = async () => {
         try {
             const data = await fetch(RES_URL);
             const json = await data.json();
-            console.log("responseData", json);
+            console.log("responseData", json?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants);
+            setCategoryTitle(json?.data?.cards[1]?.card?.card?.header?.title);
             setRestaurant(json?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants);
             setMasterData(json?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants);
         }
         catch (err) {
             console.log("error", err);
-            
+            setErrorMessage("There is some Error while fetching the data, please try again");
         }
     }
 
@@ -91,23 +95,30 @@ const Cardcontainer = () => {
                     {category && <button className="btn btn-sm btn-dark mx-1" onClick={handleReset}>Reset</button>}
                 </div>
             </div>
-            <div className="container d-flex flex-wrap mt-4 gap-4" >
-                {
-                    restaurant.length !== 0  ?
-                        restaurant.map((card, index) => {
-                            return (
-                                <Restaurantcard
-                                    key={card?.info?.id}
-                                    {...card?.info}
-                                />
-                            )
-                        }) : new Array(20).fill(0).map((card, index) => {
-                            return (<Shimmer key={index} />)
-                        })
-                }
-            </div>
+            {
+                errorMessage ?
+                    <div class="alert alert-danger">
+                        <strong>Warning!</strong>{errorMessage}.
+                    </div> :
+                    restaurant.length !== 0 ?
+                        <>
+                            <Category title={categoryTitle} />
+                            <div className="container d-flex flex-wrap mt-4 gap-4" >
+                                {restaurant.map((card, index) => {
+                                    return (
+                                        <Restaurantcard
+                                            key={card?.info?.id}
+                                            {...card?.info}
+                                        />
+                                    )
+                                })}
+                            </div>
+                        </>
+                        : <div className="container d-flex flex-wrap mt-4 gap-4">
+                            <Shimmer />
+                        </div>
+            }
         </>
-
     );
 }
 

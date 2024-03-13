@@ -50,6 +50,7 @@ table {
 .custom-card{
   width:100%;
   max-width:200px;
+  text-decoration: none;
 }
 
 .cuisine{
@@ -73,5 +74,18 @@ table {
 .ratingContainer, .timeContainer{
 	width:40px;
 }
+
+.thumbnail_container{
+	position:relative;
+	background:rgb(203, 231, 255);
+}
+
+.thumbnail_container button {
+	position :absolute;
+	bottom:-15px;
+	left:50%;
+	transform:translateX(-50%);
+}
+
 
 

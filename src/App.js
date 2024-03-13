@@ -1,8 +1,7 @@
 import './App.css';
 import './App.scss';
-import Body from './components/Body.js';
-import Footer from './components/Footer.js';
 import Header from './components/Header.js';
+import {Outlet} from 'react-router-dom'
 
 function App() {
   return (
@@ -22,7 +21,7 @@ function App() {
         </a>
       </header> */}
       <Header/>
-      <Body/>
+      <Outlet/>
     </div>
   );
 }
