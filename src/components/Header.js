@@ -1,6 +1,8 @@
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import useOnline from '../utils/useOnline';
 
 const Header = () => {
+    const networkStatus = useOnline();
     return (
         <nav className="navbar navbar-expand-sm navbar-light bg-warning">
             <div className="container-fluid justify-content-between">
@@ -10,6 +12,9 @@ const Header = () => {
                 </button>
                 <div className="collapse navbar-collapse justify-content-center" id="mynavbar">
                     <ul className="navbar-nav">
+                        <li className="nav-item">
+                            <div className="nav-link">Internet : {networkStatus ? "🟢" : "🔴"}</div>
+                        </li>
                         <li className="nav-item">
                             <Link className="nav-link" to="/">Home</Link>
                         </li>

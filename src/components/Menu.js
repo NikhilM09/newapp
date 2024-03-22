@@ -1,29 +1,14 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
 import Shimmer from "./Shimmer";
+import { MENU_URL } from "../utils/config";
+import useMenulist from "../utils/useMenulist";
 
 const Menu = () => {
     const searchParams = useParams();
-    console.log("params", searchParams);
     const { resId } = searchParams;
-    const MENU_URL = `https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=19.07480&lng=72.88560&restaurantId=${resId}&catalog_qa=undefined&submitAction=ENTER`;
-    const [menuList, setMenuList] = useState([]);
-    const IMG_URL = "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_208,h_208,c_fit/";
-    const getMenu = async () => {
-        try {
-            const menuData = await fetch(MENU_URL);
-            const json = await menuData.json();
-            console.log("menuData", json?.data?.cards[2]?.groupedCard?.cardGroupMap?.REGULAR);
-            setMenuList(json?.data?.cards);
-        }
-        catch (error) {
-            console.log("error", error);
-        }
-    }
-
-    useEffect(() => {
-        getMenu();
-    }, [])
+    const menuList = useMenulist(resId)
+    
 
     if (menuList.length === 0)
         return (<div className="container d-flex flex-wrap mt-4 gap-4">
@@ -68,11 +53,11 @@ const Menu = () => {
                                     <div>
                                         <div>{itemCard?.card?.info?.isVeg ? '🟢' : '🔴'}</div>
                                         <h6>{itemCard?.card?.info?.name}</h6>
-                                        <h6 className="fw-normal">Rs.{itemCard?.card?.info?.price / 100}</h6>
+                                        <h6 className="fw-normal">Rs.{(itemCard?.card?.info?.price / 100)|| (itemCard?.card?.info?.defaultPrice / 100)}</h6>
                                         <div className="text-secondary fw-light">{itemCard?.card?.info?.description}</div>
                                     </div>
                                     <div className="thumbnail_container">
-                                        <img src={IMG_URL + itemCard?.card?.info?.imageId} style={{ width: "118px", height: "96px", objectFit: "cover" }} />
+                                        <img src={MENU_URL + itemCard?.card?.info?.imageId} style={{ width: "118px", height: "96px", objectFit: "cover" }} />
                                         <button className="btn btn-light text-success">ADD</button>
                                     </div>
                                 </div>
@@ -99,7 +84,7 @@ const Menu = () => {
                                                         <div className="text-secondary fw-light">{itemCard?.card?.info?.description}</div>
                                                     </div>
                                                     <div className="thumbnail_container">
-                                                        <img src={IMG_URL + itemCard?.card?.info?.imageId} style={{ width: "118px", height: "96px", objectFit: "cover" }} />
+                                                        <img src={MENU_URL + itemCard?.card?.info?.imageId} style={{ width: "118px", height: "96px", objectFit: "cover" }} />
                                                         <button className="btn btn-light text-success">ADD</button>
                                                     </div>
                                                 </div>

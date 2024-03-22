@@ -5,60 +5,67 @@ import { useState, useEffect } from 'react';
 import { RES_URL } from "../utils/config";
 import Shimmer from "./Shimmer";
 import Category from "./Category";
+import useRestaurantList from "../utils/useRestaurantList";
 
 const Cardcontainer = () => {
     // const collection = masterData[0]?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants;
-    const [restaurant, setRestaurant] = useState([]);
-    const [masterData, setMasterData] = useState([]);
+    // const [restaurant, setRestaurant] = useState([]);
+    // const [masterData, setMasterData] = useState([]);
     const [searchText, setSearchText] = useState("");
     const [category, setActiveCategory] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
-    const [categoryTitle, setCategoryTitle] = useState("");
-    const getData = async () => {
-        try {
-            const data = await fetch(RES_URL);
-            const json = await data.json();
-            console.log("responseData", json?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants);
-            setCategoryTitle(json?.data?.cards[1]?.card?.card?.header?.title);
-            setRestaurant(json?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants);
-            setMasterData(json?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants);
-        }
-        catch (err) {
-            console.log("error", err);
-            setErrorMessage("There is some Error while fetching the data, please try again");
-        }
-    }
+    // const [categoryTitle, setCategoryTitle] = useState("");
+    const restaurantObject = useRestaurantList();
+    console.log("restaurantObject", restaurantObject);
+
+    // const {masterCollection, collection, title, updater} = restaurantObject
+    // const getData = async () => {
+    //     try {
+    //         const data = await fetch(RES_URL);
+    //         const json = await data.json();
+    //         // console.log("responseData", json?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants);
+    //         setCategoryTitle(json?.data?.cards[1]?.card?.card?.header?.title);
+    //         setRestaurant(json?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants);
+    //         setMasterData(json?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants);
+    //     }
+    //     catch (err) {
+    //         console.log("error", err);
+    //         setErrorMessage("There is some Error while fetching the data, please try again");
+    //     }
+    // }
 
     const handleSearchText = (e) => {
         setSearchText(e.target.value);
     }
 
     const searchRestaurant = () => {
-        console.log("restaurant", restaurant);
+        // console.log("restaurant", restaurant);
         //filter restaurant logic start//
-        const filteredData = masterData.filter(resItem => resItem?.info?.name.toLowerCase().includes(searchText.toLowerCase()));
-        setRestaurant(filteredData);
+        const filteredData = restaurantObject?.masterCollection.filter(resItem => resItem?.info?.name.toLowerCase().includes(searchText.toLowerCase()));
+        console.log("filterData", filteredData);
+        restaurantObject?.updater(filteredData);
+        // setRestaurant(filteredData);
     }
 
     const handleRating = () => {
-        const filteredData = masterData.filter(resItem => resItem?.info?.avgRating > 4.5);
-        if (restaurant !== masterData && category === "rating") {
+        const filteredData = restaurantObject?.masterCollection.filter(resItem => resItem?.info?.avgRating > 4.5);
+        if (restaurantObject?.collection !== restaurantObject?.masterCollection && category === "rating") {
             handleReset();
         }
         else {
-            setRestaurant(filteredData);
+            restaurantObject?.updater(filteredData);
             setActiveCategory("rating");
             console.log("filteredData", filteredData);
         }
     }
 
     const handleDeliveryTime = () => {
-        const filteredData = masterData.filter(resItem => resItem?.info?.sla?.deliveryTime < 30);
-        if (restaurant !== masterData && category === "delivery") {
+        const filteredData = restaurantObject?.masterCollection.filter(resItem => resItem?.info?.sla?.deliveryTime < 30);
+        if (restaurantObject?.collection !== restaurantObject?.masterCollection && category === "delivery") {
             handleReset();
         }
         else {
-            setRestaurant(filteredData);
+            restaurantObject?.updater(filteredData);
             setActiveCategory("delivery");
             console.log("filteredData", filteredData);
         }
@@ -66,19 +73,19 @@ const Cardcontainer = () => {
 
     const handleCategory = () => {
         setActiveCategory("veg");
-        const filteredData = masterData.filter(resItem => resItem?.info?.veg);
-        setRestaurant(filteredData);
+        const filteredData = restaurantObject?.masterCollection.filter(resItem => resItem?.info?.veg);
+        restaurantObject?.updater(filteredData);
         console.log("filteredData", filteredData);
     }
 
     const handleReset = () => {
         setActiveCategory("");
-        setRestaurant(masterData);
+        restaurantObject?.updater(restaurantObject?.masterCollection);
     }
-    useEffect(() => {
-        console.log("useEffect called");
-        getData();
-    }, []);
+    // useEffect(() => {
+    //     console.log("useEffect called");
+    //     getData();
+    // }, []);
 
     console.log("component rendered");
     return (
@@ -100,11 +107,11 @@ const Cardcontainer = () => {
                     <div class="alert alert-danger">
                         <strong>Warning!</strong>{errorMessage}.
                     </div> :
-                    restaurant.length !== 0 ?
+                    restaurantObject?.masterCollection.length !== 0 ?
                         <>
-                            <Category title={categoryTitle} />
+                            <Category title={restaurantObject.title} />
                             <div className="container d-flex flex-wrap mt-4 gap-4" >
-                                {restaurant.map((card, index) => {
+                                {restaurantObject.collection.map((card, index) => {
                                     return (
                                         <Restaurantcard
                                             key={card?.info?.id}
