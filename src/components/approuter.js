@@ -5,6 +5,14 @@ import Body from './Body';
 import { createBrowserRouter } from "react-router-dom";
 import CustomError from "./CustomError";
 import Menu from "./Menu";
+import { lazy, Suspense } from "react";
+const Franchise = lazy(()=>import("./Franchise"));
+
+//lazy loading
+//dynamic imports
+//ondemand loading
+//code splitting
+//chunking
 
 const approuter = createBrowserRouter([
     {
@@ -29,6 +37,10 @@ const approuter = createBrowserRouter([
             {
                 path:"menu/:resId",
                 element : <Menu/>
+            },
+            {
+                path:"franchise",
+                element : <Suspense fallback={<h1>Page is loading.........</h1>}><Franchise/></Suspense>
             }
         ]
     }
