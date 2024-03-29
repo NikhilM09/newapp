@@ -13,6 +13,15 @@ const Menu = () => {
     const menuList = useMenulist(resId)
     const [activeIndex, setActiveIndex] = useState(0)
     console.log("menuList", menuList)
+
+    const handleShow = (val) => {
+        if(val===activeIndex){
+            setActiveIndex(-1)
+        }
+        else{
+            setActiveIndex(val)
+        }
+    }
     if (menuList.length === 0)
         return (<div className="container d-flex flex-wrap mt-4 gap-4">
             <Shimmer />
@@ -73,7 +82,7 @@ const Menu = () => {
                         title={filteredItem?.card?.card?.title}
                         filteredCollection={filteredItem?.card?.card?.itemCards}
                         showList={activeIndex===index}
-                        toggleFunction={()=>setActiveIndex(index)}
+                        toggleFunction={()=>handleShow(index)}
                         />
                     )
                 }

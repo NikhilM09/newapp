@@ -1,12 +1,12 @@
 import { MENU_URL } from "../utils/config"
 import { useState } from 'react'
 
-const NormalMenu = ({title, filteredCollection, showList, toggleFunction}) => {
+const NormalMenu = ({title, filteredCollection,isNested, showNestedList, showList, toggleFunction, toggleNested}) => {
     return (
         <div className="pt-4"  style={{ borderBottom: "15px solid #f0f0f0" }}>
-            <h6 onClick={toggleFunction}>{title}</h6>
+            <h6 onClick={isNested ? toggleNested : toggleFunction}>{title}</h6>
             {
-                showList && filteredCollection.map(itemCard =>
+                (isNested ? showNestedList : showList) && filteredCollection.map(itemCard =>
                     <div className="d-flex justify-content-between align-items-center border-bottom border-secondary pb-4 pt-3" key={itemCard?.card?.info?.id}>
                         <div>
                             <div>{itemCard?.card?.info?.isVeg ? '🟢' : '🔴'}</div>

@@ -7,7 +7,7 @@ import Shimmer from "./Shimmer";
 import Category from "./Category";
 import useRestaurantList from "../utils/useRestaurantList";
 
-const Cardcontainer = () => {
+const Cardcontainer = ({location}) => {
     // const collection = masterData[0]?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants;
     // const [restaurant, setRestaurant] = useState([]);
     // const [masterData, setMasterData] = useState([]);
@@ -116,6 +116,7 @@ const Cardcontainer = () => {
                                         <Restaurantcard
                                             key={card?.info?.id}
                                             {...card?.info}
+                                            reslocation={location}
                                         />
                                     )
                                 })}

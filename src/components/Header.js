@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom';
 import useOnline from '../utils/useOnline';
 
-const Header = () => {
+const Header = ({parentdata}) => {
     const networkStatus = useOnline();
+    console.log("parent data", parentdata);
     return (
         <nav className="navbar navbar-expand-sm navbar-light bg-warning">
             <div className="container-fluid justify-content-between">

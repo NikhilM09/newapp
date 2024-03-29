@@ -4,6 +4,7 @@ import Header from './components/Header.js';
 import {Outlet} from 'react-router-dom'
 
 function App() {
+  const name = "nikhil";
   return (
     <div className="App">
       {/* <header className="App-header">
@@ -20,7 +21,7 @@ function App() {
           Learn React
         </a>
       </header> */}
-      <Header/>
+      <Header parentdata={name}/>
       <Outlet/>
     </div>
   );
