@@ -1,6 +1,7 @@
 import User from "./User";
 import UserClass from "./UserClass"
 import {Component} from 'react'
+import UserContext from "../utils/UserContext";
 // const About = () => {
 //     return(
 //         <div className="container">
@@ -25,7 +26,10 @@ class About extends Component {
         console.log("Parent render called")
         return(
             <div className="container">
-             This is about us component (Class based)
+             This is about us component (Class based) : Created By -  
+             <UserContext.Consumer>
+                {(data)=> <span>{data.userName}</span>}
+             </UserContext.Consumer>
              {/* <User name="nikhil" location="mumbai" contact="confidential"/> */}
              <UserClass />
              {/* <User/> */}

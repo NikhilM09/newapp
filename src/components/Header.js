@@ -1,9 +1,12 @@
 import { Link } from 'react-router-dom';
 import useOnline from '../utils/useOnline';
+import { useContext } from 'react';
+import UserContext from '../utils/UserContext';
 
 const Header = ({parentdata}) => {
     const networkStatus = useOnline();
-    console.log("parent data", parentdata);
+    const contextData = useContext(UserContext);
+    console.log("context data", contextData);
     return (
         <nav className="navbar navbar-expand-sm navbar-light bg-warning">
             <div className="container-fluid justify-content-between">
@@ -27,6 +30,9 @@ const Header = ({parentdata}) => {
                         </li>
                         <li className="nav-item">
                             <Link className="nav-link" to="/franchise">Partner with us</Link>
+                        </li>
+                        <li className="nav-item">
+                            {contextData?.userName}
                         </li>
                     </ul>
                     {/* <form className="d-flex">

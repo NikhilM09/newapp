@@ -6,8 +6,10 @@ import { RES_URL } from "../utils/config";
 import Shimmer from "./Shimmer";
 import Category from "./Category";
 import useRestaurantList from "../utils/useRestaurantList";
+import { useContext } from "react";
+import UserContext from "../utils/UserContext";
 
-const Cardcontainer = ({location}) => {
+const Cardcontainer = ({ location }) => {
     // const collection = masterData[0]?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants;
     // const [restaurant, setRestaurant] = useState([]);
     // const [masterData, setMasterData] = useState([]);
@@ -17,6 +19,8 @@ const Cardcontainer = ({location}) => {
     // const [categoryTitle, setCategoryTitle] = useState("");
     const restaurantObject = useRestaurantList();
     console.log("restaurantObject", restaurantObject);
+    const data = useContext(UserContext)
+    console.log("context data in body", data)
 
     // const {masterCollection, collection, title, updater} = restaurantObject
     // const getData = async () => {
@@ -87,6 +91,11 @@ const Cardcontainer = ({location}) => {
     //     getData();
     // }, []);
 
+
+    const handleContext = (val) =>{
+        data.method({...data,
+            userName:val})
+    }
     console.log("component rendered");
     return (
         <>
@@ -94,6 +103,9 @@ const Cardcontainer = ({location}) => {
                 <div className="d-flex gap-2">
                     <input type="text" value={searchText} onChange={handleSearchText} />
                     <button className="btn btn-sm btn-success" onClick={searchRestaurant}>Search</button>
+                </div>
+                <div>
+                    <input type="text" value={data.userName} onChange={(e)=>handleContext(e.target.value)}/>
                 </div>
                 <div className="btn-container">
                     <button className="btn btn-sm btn-dark mx-1" style={{ backgroundColor: category === "rating" ? "green" : "" }} onClick={handleRating}>Rating 4.5+</button>
